@@ -1,7 +1,10 @@
 {% extends 'planner/base.html' %}
 
 {% block content %}
-<h1 class="mb-4">Dashboard</h1>
+<h1 class="mb-2">Dashboard</h1>
+<p class="text-muted mb-4">
+    Welcome back, <strong>{{ request.user.username }}</strong>
+</p>
 
 <h2 class="mb-3">Statistics</h2>
 <div class="row g-3 mb-5">
@@ -48,10 +51,10 @@
         <ul class="list-group list-group-flush">
             {% for assignment in assignments %}
                 <li class="list-group-item">
-                    ⏳ {{ assignment.title }} - {{ assignment.due_date }}
+                    ⏳ <strong>{{ assignment.title }}</strong> - {{ assignment.due_date|date:"F d, Y, g:i a" }}
                 </li>
             {% empty %}
-                <li class="list-group-item">No pending assignments</li>
+                <li class="list-group-item text-muted">No pending assignments</li>
             {% endfor %}
         </ul>
     </div>
@@ -62,11 +65,11 @@
         <h2 class="card-title mb-3">Overdue Assignments</h2>
         <ul class="list-group list-group-flush">
             {% for assignment in overdue_list %}
-                <li class="list-group-item">
-                    ❗ {{ assignment.title }} - {{ assignment.due_date }}
+                <li class="list-group-item text-danger">
+                    ❗ <strong>{{ assignment.title }}</strong> - {{ assignment.due_date|date:"F d, Y, g:i a" }}
                 </li>
             {% empty %}
-                <li class="list-group-item">No overdue assignments</li>
+                <li class="list-group-item text-muted">No overdue assignments</li>
             {% endfor %}
         </ul>
     </div>

@@ -5,7 +5,7 @@ from .models import Course, Assignment
 class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ['name', 'code']
+        fields = ['name', 'code', 'description']
 
 class AssignmentForm(forms.ModelForm):
     due_date = forms.DateTimeField(
@@ -17,3 +17,9 @@ class AssignmentForm(forms.ModelForm):
         model = Assignment
         fields = ['course', 'title', 'due_date', 'completed']
     
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super().__init__(*args, **kwargs)
+
+        if user is not None:
+            self.fields['course'].queryset = Course.objects.filter(owner=user)
