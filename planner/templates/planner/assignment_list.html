@@ -1,0 +1,83 @@
+{% extends 'planner/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">Assignments</h1>
+    <a href="{% url 'assignment_create' %}" class="btn btn-primary">Add Assignment</a>
+</div>
+
+<div class="mb-3">
+    <button class="btn btn-outline-secondary btn-sm me-2" onclick="filterAssignments('all')">All</button>
+    <button class="btn btn-outline-warning btn-sm me-2" onclick="filterAssignments('pending')">Pending</button>
+    <button class="btn btn-outline-success btn-sm me-2" onclick="filterAssignments('completed')">Completed</button>
+    <button class="btn btn-outline-danger btn-sm" onclick="filterAssignments('overdue')">Overdue</button>
+</div>
+
+<div class="card section-card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" aria-label="Assignments table">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Course</th>
+                        <th scope="col">Due Date</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="assignment-list">
+                    {% for assignment in assignments %}
+                        <tr data-status="{% if assignment.completed %}completed{% elif assignment.overdue %}overdue{% else %}pending{% endif %}">
+                            <td>{{ assignment.title }}</td>
+                            <td>{{ assignment.course.name }}</td>
+                            <td>{{ assignment.due_date }}</td>
+                            <td>
+                                {% if assignment.completed %}
+                                    <span class="status-completed">✅ Completed</span>
+                                {% elif assignment.overdue %}
+                                    <span class="status-overdue">❗ Overdue</span>
+                                {% else %}
+                                    <span class="status-pending">⏳ Pending</span>
+                                {% endif %}
+                            </td>
+                            <td class="action-links">
+                                <a href="{% url 'toggle_assignment' assignment.id %}" class="btn btn-sm btn-outline-secondary">Toggle</a>
+                                <a href="{% url 'assignment_edit' assignment.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                <a href="{% url 'assignment_delete' assignment.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5">No assignments</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+function filterAssignments(status) {
+    const rows = document.querySelectorAll("#assignment-list tr");
+
+    rows.forEach(row => {
+        const rowStatus = row.dataset.status;
+
+        if (!rowStatus) {
+            row.style.display = "";
+            return;
+        }
+
+        if (status === "all") {
+            row.style.display = "";
+        } else if (rowStatus === status) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+}
+</script>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'planner/base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Dashboard</h1>
+
+<h2 class="mb-3">Statistics</h2>
+<div class="row g-3 mb-5">
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card stat-card text-center h-100">
+            <div class="card-body">
+                <h3 class="card-title">Total Courses</h3>
+                <p class="card-text">{{ total_courses }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card stat-card text-center h-100">
+            <div class="card-body">
+                <h3 class="card-title">Total Assignments</h3>
+                <p class="card-text">{{ total_assignments }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card stat-card text-center h-100">
+            <div class="card-body">
+                <h3 class="card-title">Pending</h3>
+                <p class="card-text">{{ pending_assignments }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="card stat-card text-center h-100">
+            <div class="card-body">
+                <h3 class="card-title">Overdue</h3>
+                <p class="card-text">{{ overdue_assignments }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card section-card mb-4">
+    <div class="card-body">
+        <h2 class="card-title mb-3">Upcoming Assignments</h2>
+        <ul class="list-group list-group-flush">
+            {% for assignment in assignments %}
+                <li class="list-group-item">
+                    ⏳ {{ assignment.title }} - {{ assignment.due_date }}
+                </li>
+            {% empty %}
+                <li class="list-group-item">No pending assignments</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<div class="card section-card">
+    <div class="card-body">
+        <h2 class="card-title mb-3">Overdue Assignments</h2>
+        <ul class="list-group list-group-flush">
+            {% for assignment in overdue_list %}
+                <li class="list-group-item">
+                    ❗ {{ assignment.title }} - {{ assignment.due_date }}
+                </li>
+            {% empty %}
+                <li class="list-group-item">No overdue assignments</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}
