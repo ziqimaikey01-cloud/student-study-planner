@@ -1,13 +1,15 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Course, Assignment
 from .forms import CourseForm, AssignmentForm
-from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 
 # Create your views here.
+def home(request):
+    return redirect('login')
+
 @login_required
 def dashboard(request):
     assignments = Assignment.objects.filter(
@@ -100,6 +102,8 @@ def assignment_edit(request, assignment_id):
 
 @login_required
 def toggle_assignment(request, assignment_id):
+    if request.method != 'POST':
+        return redirect('assignment_list')
     assignment = get_object_or_404(Assignment, id=assignment_id)
     assignment.completed = not assignment.completed
     assignment.save()
@@ -108,6 +112,8 @@ def toggle_assignment(request, assignment_id):
 
 @login_required
 def assignment_delete(request, assignment_id):
+    if request.method != 'POST':
+        return redirect('assignment_list')
     assignment = get_object_or_404(Assignment, id=assignment_id)
     assignment.delete()
     messages.success(request, "Assignment deleted successfully.")
